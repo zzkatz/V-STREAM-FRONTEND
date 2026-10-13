@@ -9,7 +9,10 @@ function HomePage() {
   const dispatch = useDispatch();
   const videos = useSelector((state) => state.video?.videos);
   const loading = useSelector((state) => state.video?.loading);
-  const hasNextPage = useSelector((state) => state.video?.videos?.hasNextPage);
+  const pagination = useSelector((state) => state.video?.pagination);
+  const hasMore =
+    pagination &&
+    pagination.currentPage < pagination.totalPages;
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,15 +23,11 @@ function HomePage() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (loading) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
+    setIsLoading(Boolean(loading));
   }, [loading]);
 
   const fetchMoreVideos = useCallback(() => {
-    if (hasNextPage) {
+    if (hasMore) {
       dispatch(getAllVideos({ page: page + 1, limit: 10 }))
         .then(() => {
           setPage((prev) => prev + 1);
@@ -38,21 +37,18 @@ function HomePage() {
           setIsLoading(false);
         });
     }
-  }, [page, hasNextPage, dispatch]);
+  }, [page, hasMore, dispatch]);
 
   return (
     <Container>
       <InfiniteScroll
         dataLength={videos?.length || 0}
         next={fetchMoreVideos}
-        hasMore={hasNextPage}
+        hasMore={Boolean(hasMore)}
         loader={isLoading && <HomeSkeleton />}
-        scrollableTarget="scrollable-container"
+        scrollableTarget="main-scroll"
       >
-        <div
-          className="text-white mb-20 sm:m-0 max-h-screen w-full grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 overflow-y-scroll"
-          id="scrollable-container"
-        >
+        <div className="text-white mb-20 sm:mb-0 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {videos?.map((video) => (
             <VideoList
               key={video._id}

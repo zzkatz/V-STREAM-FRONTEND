@@ -2,13 +2,14 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../helpers/axiosInstance";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../../constants";
+import { getErrorMessage } from "../../helpers/getErrorMessage";
 
 const initialState = {
   loading: false,
   uploading: false,
   uploaded: false,
   videos: [],
-
+  pagination: null,
   video: null,
   publishToggled: false,
 };
@@ -31,7 +32,7 @@ export const getAllVideos = createAsyncThunk(
       const response = await axiosInstance.get(url);
       return response.data.data;
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      toast.error(getErrorMessage(error, "Failed to fetch videos"));
       throw error;
     }
   }
@@ -49,7 +50,7 @@ export const publishAvideo = createAsyncThunk("publishAvideo", async (data) => {
     toast.success(response?.data?.message);
     return response.data.data;
   } catch (error) {
-    toast.error(error?.response?.data?.error);
+    toast.error(getErrorMessage(error, "Failed to upload video"));
     throw error;
   }
 });
@@ -70,7 +71,7 @@ export const updateAVideo = createAsyncThunk(
       toast.success(response?.data?.message);
       return response.data.data;
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      toast.error(getErrorMessage(error, "Failed to update video"));
       throw error;
     }
   }
@@ -129,6 +130,7 @@ const videoSlice = createSlice({
     },
     makeVideosNull: (state) => {
       state.videos = [];
+      state.pagination = null;
     },
   },
   extraReducers: (builder) => {

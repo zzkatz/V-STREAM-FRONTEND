@@ -3,7 +3,7 @@ import { FaPlayCircle } from "react-icons/fa";
 
 const NoVideosFound = ({ text }) => {
     return (
-        <div className="flex flex-col pb-20 items-center justify-center text-white h-screen">
+        <div className="flex flex-col pb-20 sm:pb-8 items-center justify-center text-white min-h-[50vh]">
             <FaPlayCircle
                 size={45}
                 className="text-purple-500"

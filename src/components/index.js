@@ -15,6 +15,7 @@ import Video from "./Video";
 import CommentList from "./CommentsList";
 import Edit from "./Edit";
 import DeleteConfirmation from "./DeleteConfirmation";
+import EndStreamConfirmation from "./EndStreamConfirmation";
 import Like from "./Like";
 import Description from "./Description";
 import TweetsList from "./TweetsList";
@@ -37,6 +38,9 @@ import LoginPopup from "./LoginPopup ";
 import AuthLayout from "./AuthLayout";
 import InfiniteScroll from "./InfiniteScroll"
 import SearchForSmallScreen from "./SearchForSmallScreen";
+import RecommendationsPlaceholder from "./RecommendationsPlaceholder";
+import DownloadClipModal from "./DownloadClipModal";
+import EditLiveStream from "./EditLiveStream";
 
 export {
     Button,
@@ -55,6 +59,7 @@ export {
     CommentList,
     Edit,
     DeleteConfirmation,
+    EndStreamConfirmation,
     Like,
     Description,
     TweetsList,
@@ -77,5 +82,8 @@ export {
     LoginPopup,
     AuthLayout,
     InfiniteScroll,
-    SearchForSmallScreen
+    SearchForSmallScreen,
+    RecommendationsPlaceholder,
+    DownloadClipModal,
+    EditLiveStream,
 };

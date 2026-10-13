@@ -13,9 +13,11 @@ function Description({
     avatar,
     subscribersCount,
     likesCount,
+    dislikesCount,
     isSubscribed,
     description,
     isLiked,
+    isDisliked,
     videoId,
     channelId,
 }) {
@@ -36,7 +38,7 @@ function Description({
     const handleSubsribe = () => {};
     return (
         <>
-            <section className="sm:max-w-4xl w-full text-white sm:p-5 p-2 space-y-2">
+            <section className="w-full text-white sm:py-5 sm:px-0 px-3 py-2 space-y-2">
                 <div className="border-b border-slate-700">
                     <div className="space-y-2 mb-2">
                         <h1 className="sm:text-2xl font-semibold">{title}</h1>
@@ -49,11 +51,13 @@ function Description({
                                     {timeAgo(createdAt)}
                                 </span>
                             </div>
-                            <div className=" rounded-full w-24 flex justify-center bg-[#222222] py-1">
+                            <div className="rounded-full px-3 flex justify-center bg-[#222222] py-1">
                                 <Like
                                     isLiked={isLiked}
+                                    isDisliked={isDisliked}
                                     videoId={videoId}
                                     likesCount={likesCount}
+                                    dislikesCount={dislikesCount}
                                     size={25}
                                 />
                             </div>

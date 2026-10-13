@@ -1,17 +1,21 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Input from "./Input";
 import Button from "./Button";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import { getSearchContext } from "../helpers/matchesQuery";
 
 function SearchForSmallScreen({ open, setOpenSearch }) {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const searchContext = getSearchContext(pathname);
 
   const search = (data) => {
-    const query = data?.query;
-    navigate(`/search/${query}`);
+    const query = data?.query?.trim();
+    if (!query) return;
+    navigate(searchContext.buildPath(query));
     setOpenSearch((prev) => !prev);
   };
 
@@ -32,7 +36,7 @@ function SearchForSmallScreen({ open, setOpenSearch }) {
             >
               <Input
                 type="text"
-                placeholder="Search"
+                placeholder={searchContext.placeholder}
                 className="px-4 py-2 border border-gray-300 focus:outline-none"
                 {...register("query", { required: true })}
               />

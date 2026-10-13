@@ -12,7 +12,9 @@ function CommentsList({
     content,
     commentId,
     isLiked,
+    isDisliked,
     likesCount,
+    dislikesCount,
 }) {
     const avatar2 = useSelector((state) => state.auth?.userData?.avatar.url);
     const authUsername = useSelector((state) => state.auth?.userData?.username);
@@ -150,7 +152,9 @@ function CommentsList({
                     {/* Like for comments */}
                     <Like
                         isLiked={isLiked}
+                        isDisliked={isDisliked}
                         likesCount={likesCount}
+                        dislikesCount={dislikesCount}
                         commentId={commentId}
                         size={17}
                     />

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthLayout, Login, SignUp } from "./components/index";
 import { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -19,6 +19,10 @@ import {
     SearchVideos,
     TermsAndConditions,
     ChannelPlaylist,
+    GoLive,
+    LiveHome,
+    LiveWatch,
+    ChannelLive,
 } from "./pages";
 import { EditPersonalInfo, ChangePassword, Layout } from "./components";
 
@@ -61,6 +65,10 @@ function App() {
                         }
                     >
                         <Route
+                            index
+                            element={<Navigate to="videos" replace />}
+                        />
+                        <Route
                             path="videos"
                             element={
                                 <AuthLayout authentication>
@@ -81,6 +89,14 @@ function App() {
                             element={
                                 <AuthLayout authentication>
                                     <ChannelTweets />
+                                </AuthLayout>
+                            }
+                        />
+                        <Route
+                            path="live"
+                            element={
+                                <AuthLayout authentication>
+                                    <ChannelLive />
                                 </AuthLayout>
                             }
                         />
@@ -114,6 +130,46 @@ function App() {
                         element={
                             <AuthLayout authentication>
                                 <MySubscriptions />
+                            </AuthLayout>
+                        }
+                    />
+                    <Route
+                        path="/watch/:videoId"
+                        element={
+                            <AuthLayout authentication>
+                                <VideoDetail />
+                            </AuthLayout>
+                        }
+                    />
+                    <Route
+                        path="/live"
+                        element={
+                            <AuthLayout authentication>
+                                <LiveHome />
+                            </AuthLayout>
+                        }
+                    />
+                    <Route
+                        path="/live/:streamId"
+                        element={
+                            <AuthLayout authentication>
+                                <LiveWatch />
+                            </AuthLayout>
+                        }
+                    />
+                    <Route
+                        path="/go-live"
+                        element={
+                            <AuthLayout authentication>
+                                <GoLive />
+                            </AuthLayout>
+                        }
+                    />
+                    <Route
+                        path="/collections"
+                        element={
+                            <AuthLayout authentication>
+                                <AdminDashboard />
                             </AuthLayout>
                         }
                     />
@@ -156,22 +212,6 @@ function App() {
                     element={
                         <AuthLayout authentication={false}>
                             <SignUp />
-                        </AuthLayout>
-                    }
-                />
-                <Route
-                    path="/watch/:videoId"
-                    element={
-                        <AuthLayout authentication>
-                            <VideoDetail />
-                        </AuthLayout>
-                    }
-                />
-                <Route
-                    path="/collections"
-                    element={
-                        <AuthLayout authentication>
-                            <AdminDashboard />
                         </AuthLayout>
                     }
                 />

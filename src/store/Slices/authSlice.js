@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../helpers/axiosInstance";
+import { getErrorMessage } from "../../helpers/getErrorMessage";
 import toast from "react-hot-toast";
 
 const initialState = {
@@ -21,11 +22,10 @@ export const createAccount = createAsyncThunk("register", async (data) => {
 
   try {
     const response = await axiosInstance.post("/users/register", formData);
-    console.log(response.data);
     toast.success("Registered successfully!!!");
     return response.data;
   } catch (error) {
-    toast.error(error?.response?.data?.error);
+    toast.error(getErrorMessage(error, "Registration failed. Please try again"));
     throw error;
   }
 });
@@ -35,7 +35,7 @@ export const userLogin = createAsyncThunk("login", async (data) => {
     const response = await axiosInstance.post("/users/login", data);
     return response.data.data.user;
   } catch (error) {
-    toast.error(error?.response?.data?.error);
+    toast.error(getErrorMessage(error, "Login failed. Please try again"));
     throw error;
   }
 });
@@ -46,7 +46,7 @@ export const userLogout = createAsyncThunk("logout", async () => {
     toast.success(response.data?.message);
     return response.data;
   } catch (error) {
-    toast.error(error?.response?.data?.error);
+    toast.error(getErrorMessage(error));
     throw error;
   }
 });
@@ -61,7 +61,7 @@ export const refreshAccessToken = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      toast.error(getErrorMessage(error));
       throw error;
     }
   }
@@ -78,7 +78,7 @@ export const changePassword = createAsyncThunk(
       toast.success(response.data?.message);
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      toast.error(getErrorMessage(error));
       throw error;
     }
   }
@@ -98,7 +98,7 @@ export const updateAvatar = createAsyncThunk("updateAvatar", async (avatar) => {
     toast.success("Updated details successfully!!!");
     return response.data.data;
   } catch (error) {
-    toast.error(error?.response?.data?.error);
+    toast.error(getErrorMessage(error));
     throw error;
   }
 });
@@ -114,7 +114,7 @@ export const updateCoverImg = createAsyncThunk(
       toast.success(response.data?.message);
       return response.data.data;
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      toast.error(getErrorMessage(error));
       throw error;
     }
   }
@@ -131,7 +131,7 @@ export const updateUserDetails = createAsyncThunk(
       toast.success("Updated details successfully!!!");
       return response.data;
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      toast.error(getErrorMessage(error));
       throw error;
     }
   }
@@ -148,6 +148,9 @@ const authSlice = createSlice({
     builder.addCase(createAccount.fulfilled, (state) => {
       state.loading = false;
     });
+    builder.addCase(createAccount.rejected, (state) => {
+      state.loading = false;
+    });
     builder.addCase(userLogin.pending, (state) => {
       state.loading = true;
     });
@@ -156,6 +159,10 @@ const authSlice = createSlice({
       state.status = true;
       state.userData = action.payload;
     });
+    builder.addCase(userLogin.rejected, (state) => {
+      state.loading = false;
+      state.status = false;
+    });
     builder.addCase(userLogout.pending, (state) => {
       state.loading = true;
     });
@@ -163,6 +170,9 @@ const authSlice = createSlice({
       state.loading = false;
       state.status = false;
       state.userData = null;
+    });
+    builder.addCase(userLogout.rejected, (state) => {
+      state.loading = false;
     });
     builder.addCase(getCurrentUser.pending, (state) => {
       state.loading = true;
@@ -203,6 +213,9 @@ const authSlice = createSlice({
     builder.addCase(updateUserDetails.fulfilled, (state, action) => {
       state.loading = false;
       state.userData = action.payload;
+    });
+    builder.addCase(updateUserDetails.rejected, (state) => {
+      state.loading = false;
     });
   },
 });

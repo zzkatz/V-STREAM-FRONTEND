@@ -6,17 +6,24 @@ import { getAllVideos, makeVideosNull } from "../../store/Slices/videoSlice";
 function ChannelVideos() {
     const dispatch = useDispatch();
     const userId = useSelector((state) => state.user?.profileData?._id);
-    const videos = useSelector((state) => state.video?.videos?.docs);
+    const videos = useSelector((state) => state.video?.videos);
     const [searchParams, setSearchParams] = useState();
     const [activeButton, setActiveButton] = useState("button1");
 
     useEffect(() => {
+        if (!userId) return;
+
         const sortBy = searchParams?.sortBy;
         const sortType = searchParams?.sortType;
+        dispatch(makeVideosNull());
         dispatch(getAllVideos({ userId, sortBy, sortType }));
 
         return () => dispatch(makeVideosNull());
     }, [dispatch, userId, searchParams]);
+
+    if (!userId) {
+        return null;
+    }
 
     if (videos?.length == 0) {
         return <NoVideosFound />;
@@ -28,8 +35,7 @@ function ChannelVideos() {
 
     return (
         <>
-            {/* For sorting latest, popular and oldest videos */}
-            <div className="w-full p-2 text-white flex gap-4">
+            <div className="w-full p-2 text-white flex gap-4 flex-wrap">
                 <button
                     onClick={() => {
                         setActiveButton("button1");
@@ -54,7 +60,7 @@ function ChannelVideos() {
                             : "bg-[#222222]"
                     }`}
                 >
-                    Popluar
+                    Popular
                 </button>
                 <button
                     onClick={() => {
@@ -70,17 +76,17 @@ function ChannelVideos() {
                     Oldest
                 </button>
             </div>
-            {/* Video listing */}
-            <div className="grid lg:grid-cols-3 sm:grid-cols-2 text-white">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 text-white">
                 {videos?.map((video) => (
                     <VideoList
                         key={video._id}
-                        avatar={video.avatar?.url}
+                        avatar={video.ownerDetails?.avatar?.url}
                         duration={video.duration}
                         title={video.title}
                         thumbnail={video.thumbnail?.url}
                         createdAt={video.createdAt}
                         views={video.views}
+                        channelName={video.ownerDetails?.username}
                         videoId={video._id}
                     />
                 ))}

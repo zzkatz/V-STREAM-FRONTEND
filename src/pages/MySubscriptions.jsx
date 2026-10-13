@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSubscribedChannels } from "../store/Slices/subscriptionSlice";
 import { Link } from "react-router-dom";
-import { VideoList, Avatar } from "../components";
+import { Avatar } from "../components";
 
 function MySubscriptions() {
     const dispatch = useDispatch();
@@ -10,79 +10,54 @@ function MySubscriptions() {
         (state) => state.subscription?.mySubscriptions
     );
     const subscriberId = useSelector((state) => state.auth?.userData?._id);
+
     useEffect(() => {
-        if (subscriptions) {
+        if (subscriberId) {
             dispatch(getSubscribedChannels(subscriberId));
         }
     }, [dispatch, subscriberId]);
+
     window.scrollTo(0, 0);
-    
+
+    if (!subscriptions?.length) {
+        return (
+            <div className="text-white text-center py-10 mb-20 sm:mb-0">
+                No subscribed channels yet
+            </div>
+        );
+    }
+
     return (
-        <>
-            <div className="flex gap-2 p-2 text-white items-center bg-[#222222]">
-                {subscriptions?.map((subscription) => (
-                    <div
-                        key={subscription?.subscribedChannel?._id}
-                        className="flex flex-col items-center overflow-x-scroll"
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 text-white mb-20 sm:mb-0">
+            {subscriptions.map((subscription) => {
+                const channel = subscription?.subscribedChannel;
+                if (!channel?._id) return null;
+
+                return (
+                    <Link
+                        to={`/channel/${channel.username}/videos`}
+                        key={channel._id}
+                        className="flex items-center gap-3 border border-slate-600 p-3 hover:bg-[#222222]"
                     >
                         <Avatar
-                            src={subscription?.subscribedChannel?.avatar.url}
-                            channelName={
-                                subscription?.subscribedChannel?.username
-                            }
+                            src={channel?.avatar?.url}
+                            channelName={channel?.username}
                         />
-                        <h5 className="text-xs">
-                            {subscription?.subscribedChannel?.username}
-                        </h5>
-                    </div>
-                ))}
-            </div>
-
-            <div className="text-white mb-20 sm:mb-0 w-full grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 overflow-y-scroll">
-                {subscriptions?.map((subscription) => (
-                    <Link
-                        to={`/watch/${subscription?.subscribedChannel?.latestVideo?._id}`}
-                        key={subscription?.subscribedChannel?._id}
-                    >
-                        {subscription?.subscribedChannel?.latestVideo && (
-                            <VideoList
-                                key={subscription?.subscribedChannel?._id}
-                                avatar={
-                                    subscription?.subscribedChannel?.avatar.url
-                                }
-                                duration={
-                                    subscription?.subscribedChannel?.latestVideo
-                                        ?.duration
-                                }
-                                title={
-                                    subscription?.subscribedChannel?.latestVideo
-                                        ?.title
-                                }
-                                thumbnail={
-                                    subscription?.subscribedChannel?.latestVideo
-                                        ?.thumbnail?.url
-                                }
-                                createdAt={
-                                    subscription?.subscribedChannel?.latestVideo
-                                        ?.createdAt
-                                }
-                                views={
-                                    subscription?.subscribedChannel?.latestVideo
-                                        ?.views
-                                }
-                                channelName={
-                                    subscription?.subscribedChannel?.username
-                                }
-                                videoId={
-                                    subscription?.subscribedChannel?.latestVideo
-                                        ?._id
-                                }
-                            />
-                        )}
+                        <div className="min-w-0">
+                            <h5 className="font-semibold truncate">
+                                {channel?.fullName || channel?.username}
+                            </h5>
+                            <p className="text-sm text-slate-400 truncate">
+                                @{channel?.username}
+                            </p>
+                            <span className="text-xs text-slate-400">
+                                {channel?.subscribersCount || 0} Subscribers
+                            </span>
+                        </div>
                     </Link>
-                ))}
-            </div>
-        </>
+                );
+            })}
+        </div>
     );
 }
 

@@ -48,7 +48,8 @@ export const getSubscribedChannels = createAsyncThunk(
             );
             return response.data.data;
         } catch (error) {
-            return error;
+            toast.error(error?.response?.data?.message || "Failed to load subscriptions");
+            throw error;
         }
     }
 );
@@ -80,9 +81,12 @@ const subscriptionSlice = createSlice({
         });
         builder.addCase(getSubscribedChannels.fulfilled, (state, action) => {
             state.loading = false;
-            state.mySubscriptions = action.payload.filter(
-                (subscription) => subscription?.subscribedChannel?.latestVideo
-            );
+            state.mySubscriptions = Array.isArray(action.payload)
+                ? action.payload
+                : [];
+        });
+        builder.addCase(getSubscribedChannels.rejected, (state) => {
+            state.loading = false;
         });
     },
 });

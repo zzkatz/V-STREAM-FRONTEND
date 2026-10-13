@@ -17,8 +17,24 @@ import { ImBin } from "react-icons/im";
 import { GrEdit } from "react-icons/gr";
 import { MdOutlineSlowMotionVideo } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
-import { FaRegEye, FaRegHeart } from "react-icons/fa";
-import { MdOutlineCloudUpload } from "react-icons/md";
+import {
+    FaRegEye,
+    FaRegHeart,
+    FaPlay,
+    FaPause,
+    FaVolumeUp,
+    FaVolumeMute,
+    FaExpand,
+    FaCompress,
+    FaDownload,
+} from "react-icons/fa";
+import {
+    MdOutlineCloudUpload,
+    MdReplay10,
+    MdForward10,
+    MdSpeed,
+    MdOutlineLiveTv,
+} from "react-icons/md";
 
 export {
     IoCloseCircleOutline,
@@ -42,5 +58,16 @@ export {
     RxAvatar,
     FaRegEye,
     FaRegHeart,
-    MdOutlineCloudUpload
-}
+    MdOutlineCloudUpload,
+    FaPlay,
+    FaPause,
+    FaVolumeUp,
+    FaVolumeMute,
+    FaExpand,
+    FaCompress,
+    FaDownload,
+    MdReplay10,
+    MdForward10,
+    MdSpeed,
+    MdOutlineLiveTv,
+};

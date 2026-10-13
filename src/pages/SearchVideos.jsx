@@ -18,9 +18,10 @@ function SearchVideos() {
   useEffect(() => {
     const sortType = searchParams.get("sortType");
     const sortBy = searchParams.get("sortBy");
+    dispatch(makeVideosNull());
     dispatch(
       getAllVideos({
-        query,
+        query: query ? decodeURIComponent(query) : query,
         sortBy,
         sortType,
       })
@@ -33,12 +34,12 @@ function SearchVideos() {
     setSearchParms({ sortBy: newSortBy, sortType: newSortType });
   };
 
-  if (videos?.length === 0) {
-    return <NoVideosFound text={"Try searching something else"} />;
-  }
-
   if (loading) {
     return <HomeSkeleton />;
+  }
+
+  if (!videos?.length) {
+    return <NoVideosFound text={"Try searching something else"} />;
   }
 
   return (
@@ -88,21 +89,20 @@ function SearchVideos() {
             </div>
           </div>
         )}
-        <div className="grid h-screen xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 text-white overflow-y-scroll">
-          {videos &&
-            videos.map((video) => (
-              <VideoList
-                key={video?._id}
-                thumbnail={video?.thumbnail?.url}
-                duration={video?.duration}
-                title={video?.title}
-                views={video?.views}
-                avatar={video?.ownerDetails?.avatar?.url}
-                channelName={video?.ownerDetails?.username}
-                createdAt={video?.createdAt}
-                videoId={video?._id}
-              ></VideoList>
-            ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 text-white mb-20 sm:mb-0">
+          {videos.map((video) => (
+            <VideoList
+              key={video?._id}
+              thumbnail={video?.thumbnail?.url}
+              duration={video?.duration}
+              title={video?.title}
+              views={video?.views}
+              avatar={video?.ownerDetails?.avatar?.url}
+              channelName={video?.ownerDetails?.username}
+              createdAt={video?.createdAt}
+              videoId={video?._id}
+            />
+          ))}
         </div>
       </div>
     </>

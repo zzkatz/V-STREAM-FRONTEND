@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Button, Input2, UploadingVideo } from "./index";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import { publishAvideo } from "../store/Slices/videoSlice";
 import { IoCloseCircleOutline } from "./icons";
 import GetImagePreview from "./GetImagePreview";
+import { validateVideoFile } from "../helpers/fileValidation";
 
 function UploadVideo({ setUploadVideoPopup }) {
     const [videoName, setVideoName] = useState("");
@@ -13,6 +15,7 @@ function UploadVideo({ setUploadVideoPopup }) {
         handleSubmit,
         register,
         control,
+        setValue,
         formState: { errors },
     } = useForm();
     const dispatch = useDispatch();
@@ -98,14 +101,36 @@ function UploadVideo({ setUploadVideoPopup }) {
                                 <input
                                     id="video-upload"
                                     type="file"
-                                    accept="video/*"
+                                    accept=".mp4,.mkv,.mov,video/mp4,video/x-matroska,video/quicktime"
                                     className="hidden"
                                     {...register("videoFile", {
-                                        required: "VideoFile is required",
-                                        onChange: (e) =>
-                                            setVideoName(
-                                                e.target.files[0]?.name
-                                            ),
+                                        required: "Video file is required",
+                                        validate: (value) => {
+                                            const file = value?.[0];
+                                            if (!file) {
+                                                return "Video file is required";
+                                            }
+                                            const result = validateVideoFile(file);
+                                            return result.ok || result.message;
+                                        },
+                                        onChange: (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) {
+                                                setVideoName("");
+                                                return;
+                                            }
+
+                                            const result = validateVideoFile(file);
+                                            if (!result.ok) {
+                                                toast.error(result.message);
+                                                setVideoName("");
+                                                e.target.value = "";
+                                                setValue("videoFile", "");
+                                                return;
+                                            }
+
+                                            setVideoName(file.name);
+                                        },
                                     })}
                                 />
                                 <input

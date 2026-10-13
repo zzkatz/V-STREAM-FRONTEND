@@ -65,6 +65,16 @@ function ChannelNavigate({ username, edit }) {
                     <p className="p-2">Tweets</p>
                 </NavLink>
                 <NavLink
+                    to={`/channel/${username}/live`}
+                    className={({ isActive }) =>
+                        isActive
+                            ? "bg-white text-purple-600 border-b-2 border-purple-600"
+                            : ""
+                    }
+                >
+                    <p className="p-2">Live</p>
+                </NavLink>
+                <NavLink
                     to={`/channel/${username}/subscribed`}
                     className={({ isActive }) =>
                         isActive

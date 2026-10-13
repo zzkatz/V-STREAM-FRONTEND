@@ -28,8 +28,11 @@ function ChannelPlaylist() {
         }
     }, [dispatch, userId]);
 
-    const createPlaylist = (data) => {
-        dispatch(createAPlaylist(data));
+    const createPlaylist = async (data) => {
+        const result = await dispatch(createAPlaylist(data));
+        if (result?.meta?.requestStatus === "fulfilled" && userId) {
+            dispatch(getPlaylistsByUser(userId));
+        }
         setOpenCreatePlaylist((prev) => !prev);
     };
 

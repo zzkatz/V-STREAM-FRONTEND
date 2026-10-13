@@ -13,7 +13,9 @@ function TweetsList({
     createdAt,
     content,
     likesCount = 0,
+    dislikesCount = 0,
     isLiked,
+    isDisliked,
 }) {
     const avatar2 = useSelector((state) => state.user?.profileData?.avatar.url);
     const authUsername = useSelector((state) => state.auth?.userData?.username);
@@ -85,7 +87,9 @@ function TweetsList({
                     {/* Like the tweet */}
                     <Like
                         isLiked={isLiked}
+                        isDisliked={isDisliked}
                         likesCount={likesCount}
+                        dislikesCount={dislikesCount}
                         tweetId={tweetId}
                         size={20}
                     />

@@ -12,6 +12,10 @@ import VideoDetail from "./VideoDetail";
 import SearchVideos from "./SearchVideos";
 import TermsAndConditions from "./TermsAndConditions ";
 import ChannelPlaylist from "./Channel/ChannelPlaylist";
+import GoLive from "./GoLive";
+import LiveHome from "./LiveHome";
+import LiveWatch from "./LiveWatch";
+import ChannelLive from "./Channel/ChannelLive";
 
 export {
     Channel,
@@ -27,5 +31,9 @@ export {
     VideoDetail,
     SearchVideos,
     TermsAndConditions,
-    ChannelPlaylist
+    ChannelPlaylist,
+    GoLive,
+    LiveHome,
+    LiveWatch,
+    ChannelLive,
 }

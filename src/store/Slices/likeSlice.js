@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../helpers/axiosInstance";
 import toast from "react-hot-toast";
+import { getErrorMessage } from "../../helpers/getErrorMessage";
 
 const initialState = {
     loading: false,
@@ -16,7 +17,22 @@ export const toggleVideoLike = createAsyncThunk(
             );
             return response.data.data;
         } catch (error) {
-            toast.error(error?.response?.data?.error);
+            toast.error(getErrorMessage(error));
+            throw error;
+        }
+    }
+);
+
+export const toggleVideoDislike = createAsyncThunk(
+    "toggleVideoDislike",
+    async (videoId) => {
+        try {
+            const response = await axiosInstance.post(
+                `/likes/toggle/dislike/v/${videoId}`
+            );
+            return response.data.data;
+        } catch (error) {
+            toast.error(getErrorMessage(error));
             throw error;
         }
     }
@@ -31,7 +47,22 @@ export const toggleTweetLike = createAsyncThunk(
             );
             return response.data.data;
         } catch (error) {
-            toast.error(error?.response?.data?.error);
+            toast.error(getErrorMessage(error));
+            throw error;
+        }
+    }
+);
+
+export const toggleTweetDislike = createAsyncThunk(
+    "toggleTweetDislike",
+    async (tweetId) => {
+        try {
+            const response = await axiosInstance.post(
+                `/likes/toggle/dislike/t/${tweetId}`
+            );
+            return response.data.data;
+        } catch (error) {
+            toast.error(getErrorMessage(error));
             throw error;
         }
     }
@@ -46,7 +77,22 @@ export const toggleCommentLike = createAsyncThunk(
             );
             return response.data.data;
         } catch (error) {
-            toast.error(error?.response?.data?.error);
+            toast.error(getErrorMessage(error));
+            throw error;
+        }
+    }
+);
+
+export const toggleCommentDislike = createAsyncThunk(
+    "toggleCommentDislike",
+    async (commentId) => {
+        try {
+            const response = await axiosInstance.post(
+                `/likes/toggle/dislike/c/${commentId}`
+            );
+            return response.data.data;
+        } catch (error) {
+            toast.error(getErrorMessage(error));
             throw error;
         }
     }
@@ -57,7 +103,7 @@ export const getLikedVideos = createAsyncThunk("getLikedVideos", async () => {
         const response = await axiosInstance.get("likes/videos");
         return response.data.data;
     } catch (error) {
-        toast.error(error?.response?.data?.error);
+        toast.error(getErrorMessage(error));
         throw error;
     }
 });
@@ -74,7 +120,9 @@ const likeSlice = createSlice({
             state.loading = false;
             state.likedVideos = action.payload;
         });
-
+        builder.addCase(getLikedVideos.rejected, (state) => {
+            state.loading = false;
+        });
     },
 });
 

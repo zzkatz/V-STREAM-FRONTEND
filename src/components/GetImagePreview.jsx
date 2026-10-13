@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 import { FaCamera } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { validateImageFile } from "../helpers/fileValidation";
 
 function GetImagePreview({
     name,
@@ -10,68 +12,80 @@ function GetImagePreview({
     className,
     cameraIcon = false,
     cameraSize = 20,
-    image
+    image,
+    required = true,
 }) {
     const [preview, setPreview] = useState(null);
 
-    const isValidImage = (file) => {
-        const validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp'];
-        return validImageTypes.includes(file.type);
+    const rules = {
+        ...(required ? { required: `${name} is required` } : {}),
+        validate: (value) => {
+            const file = value?.[0];
+            if (!file) {
+                return required ? `${name} is required` : true;
+            }
+            const result = validateImageFile(file);
+            return result.ok || result.message;
+        },
     };
 
-    const handlePreview = (e) => {
-        const files = e.target.files;
-        if (files.length > 0 && isValidImage(files[0])) {
-            setPreview(URL.createObjectURL(files[0]));
-        } else {
-            setPreview(null);
-        }
-        return files;
-    };
     return (
-        <>
-            <div className="w-full">
-                <label
-                    htmlFor={name}
-                    className="cursor-pointer relative flex flex-col justify-center items-start"
-                >
-                    {label && (
-                        <label className="inline-block mb-2 pl-1">
-                            {label}
-                        </label>
-                    )}
-                    {/* <div className="relative flex justify-center items-center"> */}
-                    <img
-                        src={preview || image}
-                        className={className}
+        <div className="w-full">
+            <label
+                htmlFor={name}
+                className="cursor-pointer relative flex flex-col justify-center items-start"
+            >
+                {label && (
+                    <label className="inline-block mb-2 pl-1">{label}</label>
+                )}
+                <img
+                    src={preview || image}
+                    className={className}
+                />
+                {cameraIcon && (
+                    <FaCamera
+                        size={cameraSize}
+                        className="hover:text-purple-500 absolute inline-flex justify-center items-center w-full"
                     />
-                    {cameraIcon && (
-                        <FaCamera
-                            size={cameraSize}
-                            className="hover:text-purple-500 absolute inline-flex justify-center items-center w-full"
+                )}
+                <Controller
+                    name={name}
+                    control={control}
+                    defaultValue={defaultValue || ""}
+                    rules={rules}
+                    render={({ field: { onChange } }) => (
+                        <input
+                            id={name}
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                            className="hidden"
+                            onChange={(e) => {
+                                const files = e.target.files;
+                                const file = files?.[0];
+
+                                if (!file) {
+                                    setPreview(null);
+                                    onChange("");
+                                    return;
+                                }
+
+                                const result = validateImageFile(file);
+                                if (!result.ok) {
+                                    toast.error(result.message);
+                                    setPreview(null);
+                                    e.target.value = "";
+                                    onChange("");
+                                    return;
+                                }
+
+                                setPreview(URL.createObjectURL(file));
+                                onChange(files);
+                            }}
                         />
                     )}
-                    {/* </div> */}
-                    <Controller
-                        name={name}
-                        control={control}
-                        defaultValue={defaultValue || ""}
-                        render={({ field: { onChange } }) => (
-                            <input
-                                id={name}
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={(e) => {
-                                    onChange(handlePreview(e));
-                                }}
-                            />
-                        )}
-                        rules={{ required: `${name} is required` }}
-                    />
-                </label>
-            </div>
-        </>
+                />
+            </label>
+        </div>
     );
 }
 

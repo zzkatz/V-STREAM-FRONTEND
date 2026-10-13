@@ -23,9 +23,11 @@ function ChannelTweets() {
                     content={tweet?.content}
                     createdAt={tweet?.createdAt}
                     likesCount={tweet?.likesCount}
+                    dislikesCount={tweet?.dislikesCount}
                     tweetId={tweet?._id}
                     username={tweet?.ownerDetails?.username}
                     isLiked={tweet?.isLiked}
+                    isDisliked={tweet?.isDisliked}
                 />
             ))}
         </>

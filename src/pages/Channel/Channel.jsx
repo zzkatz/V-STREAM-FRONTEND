@@ -24,13 +24,13 @@ function Channel() {
                     avatar={channel?.avatar.url}
                     subscribedCount={channel?.channelsSubscribedToCount}
                     fullName={channel?.fullName}
-                    subscribersCount={channel?.subcribersCount}
+                    subscribersCount={channel?.subscribersCount}
                     isSubscribed={channel?.isSubscribed}
                     channelId={channel?._id}
                 />
             )}
             <ChannelNavigate username={username} />
-            <div className="overflow-y-scroll h-[32rem] sm:h-96 mb-20 sm:mb-0">
+            <div className="mb-20 sm:mb-0 min-w-0 w-full">
                 <Outlet />
             </div>
         </>

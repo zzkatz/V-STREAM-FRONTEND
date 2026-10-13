@@ -4,12 +4,12 @@ import { Button, Logo } from "../components";
 
 const LoginPopup = () => {
     return (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-75 z-50">
-            <div className="bg-black border border-slate-800 rounded-lg p-5 text-white text-center">
-                <div className="flex flex-col gap-2 items-center mb-10">
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-75 z-50 p-4">
+            <div className="bg-black border border-slate-800 rounded-lg p-5 sm:p-6 text-white text-center w-full max-w-sm">
+                <div className="flex flex-col gap-2 items-center mb-8 sm:mb-10">
                     <Logo size="30" />
                 </div>
-                <p className="text-xl font-medium mb-2">
+                <p className="text-lg sm:text-xl font-medium mb-4">
                     Login or Signup to continue
                 </p>
                 <Link to="/login">
